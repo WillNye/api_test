@@ -12,16 +12,20 @@ class BaseAPICase(TestCase):
     delete_on_teardown = True
 
     @property
+    def url(self):
+        return f"{self.base_url}/{self.route}"
+
+    @property
     def object_id(self):
         return self.object[self.object_id_key]  # Override if this is not how the id is retrieved
 
     def create(self) -> requests.Response:
-        response = self.session.post(f'{self.base_url}/{self.route}', json=self.post_payload)
+        response = self.session.post(f'{self.url}', json=self.post_payload)
         self.assertTrue(response.ok)
         return response
 
     def delete(self):
-        response = self.session.delete(f'{self.base_url}/{self.route}/{self.object_id}')
+        response = self.session.delete(f'{self.url}/{self.object_id}')
         self.assertTrue(response.ok)
 
     def setUp(self):

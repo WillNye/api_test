@@ -19,7 +19,7 @@ class BaseUser(ExampleAPIBase):
 
     @classmethod
     def setUpClass(cls):
-        cls.route = 'messages/broadcasts'
+        cls.route = 'user'
         cls.delete_on_teardown = False
         super().setUpClass()
 
