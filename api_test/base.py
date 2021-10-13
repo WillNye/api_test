@@ -27,8 +27,8 @@ class BaseAPICase(TestCase):
         assert self.base_url
         assert self.route
         assert self.post_payload
+        super().setUp()
 
-        super(BaseAPICase, self).setUp()
         if not self.session:
             self.session = requests.Session()
 
@@ -37,5 +37,5 @@ class BaseAPICase(TestCase):
         self.object = res_obj
 
     def tearDown(self):
-        super(BaseAPICase, self).tearDown()
+        super().tearDown()
         self.delete()

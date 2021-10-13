@@ -54,7 +54,7 @@ class ListMixin:
         return response
 
 
-class ListMixin:
+class RetrieveMixin:
 
     def test_valid_retrieve(self):
         response = self.session.get(f'{self.url}/{self.route}/{self.object_id}')
