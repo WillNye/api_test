@@ -8,20 +8,20 @@ class DeleteMixin:
         self.delete()
 
     def test_invalid_id(self):
-        response = self.session.delete(f'{self.base_url}/{self.route}/a01')
+        response = self.session.delete(f'{self.url}/a01')
         self.assertEqual(response.status_code, 404)
 
         return response
 
     def test_id_does_not_exist(self):
-        response = self.session.delete(f'{self.base_url}/{self.route}/{uuid4()}')
+        response = self.session.delete(f'{self.url}/{uuid4()}')
         self.assertEqual(response.status_code, 404)
 
         return response
 
-    def test_unauth(self):
-        response = requests.delete(f'{self.base_url}/{self.route}/{self.object_id}')
-        self.assertEqual(response.status_code, 401)
+    def test_unauthenticated_user(self):
+        response = requests.delete(f'{self.url}/{self.object_id}')
+        self.assertEqual(response.status_code, 403)
 
         return response
 
@@ -30,7 +30,7 @@ class ListMixin:
 
     def test_filter(self, filter_key: str):
         filter_val = self.object[filter_key]
-        response = self.session.get(f'{self.base_url}/{self.route}', params={filter_key: filter_val})
+        response = self.session.get(self.url, params={filter_key: filter_val})
         self.assertTrue(response.ok)
         response_objs = response.json()
         self.assertTrue(all(obj[filter_key] == filter_val for obj in response_objs['results']))
@@ -38,7 +38,7 @@ class ListMixin:
         return response
 
     def test_sort(self, sort_param: str, sort_key: str):
-        response = self.session.get(f'{self.base_url}/{self.route}', params={sort_param: sort_key})
+        response = self.session.get(self.url, params={sort_param: sort_key})
         self.assertTrue(response.ok)
 
         if sort_key.startswith('-'):
@@ -53,10 +53,18 @@ class ListMixin:
 
         return response
 
+    def test_unauthenticated_user(self):
+        response = requests.get(self.url)
+        self.assertEqual(response.status_code, 403)
+
 
 class RetrieveMixin:
 
     def test_valid_retrieve(self):
-        response = self.session.get(f'{self.base_url}/{self.route}/{self.object_id}')
+        response = self.session.get(f'{self.url}/{self.object_id}')
         self.assertTrue(response.ok)
+
+    def test_unauthenticated_user(self):
+        response = requests.get(f'{self.url}/{self.object_id}')
+        self.assertEqual(response.status_code, 403)
 
