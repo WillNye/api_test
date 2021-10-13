@@ -1,8 +1,7 @@
 from faker import Faker
 import requests
 
-from api_test.base import BaseAPICase
-from api_test.mixins import DeleteMixin, ListMixin, RetrieveMixin
+from api_test import BaseAPICase, DeleteMixin, ListMixin, RetrieveMixin
 
 
 class ExampleAPIBase(BaseAPICase):

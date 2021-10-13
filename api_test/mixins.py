@@ -19,9 +19,9 @@ class DeleteMixin:
 
         return response
 
-    def test_unauth(self):
+    def test_unauthenticated_user(self):
         response = requests.delete(f'{self.url}/{self.object_id}')
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)
 
         return response
 
@@ -30,7 +30,7 @@ class ListMixin:
 
     def test_filter(self, filter_key: str):
         filter_val = self.object[filter_key]
-        response = self.session.get(f'{self.url}', params={filter_key: filter_val})
+        response = self.session.get(self.url, params={filter_key: filter_val})
         self.assertTrue(response.ok)
         response_objs = response.json()
         self.assertTrue(all(obj[filter_key] == filter_val for obj in response_objs['results']))
@@ -38,7 +38,7 @@ class ListMixin:
         return response
 
     def test_sort(self, sort_param: str, sort_key: str):
-        response = self.session.get(f'{self.url}', params={sort_param: sort_key})
+        response = self.session.get(self.url, params={sort_param: sort_key})
         self.assertTrue(response.ok)
 
         if sort_key.startswith('-'):
@@ -53,10 +53,18 @@ class ListMixin:
 
         return response
 
+    def test_unauthenticated_user(self):
+        response = requests.get(self.url)
+        self.assertEqual(response.status_code, 403)
+
 
 class RetrieveMixin:
 
     def test_valid_retrieve(self):
         response = self.session.get(f'{self.url}/{self.object_id}')
         self.assertTrue(response.ok)
+
+    def test_unauthenticated_user(self):
+        response = requests.get(f'{self.url}/{self.object_id}')
+        self.assertEqual(response.status_code, 403)
 
