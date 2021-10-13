@@ -2,6 +2,40 @@ from uuid import uuid4
 import requests
 
 
+class CreateMixin:
+
+    def test_create_unauthenticated_user(self):
+        response = requests.post(self.url, self.post_payload)
+        self.assertEqual(response.status_code, 403)
+
+        return response
+
+
+class PutMixin:
+
+    def test_put_unauthenticated_user(self):
+        response = requests.put(f'{self.url}/{self.object_id}', self.post_payload)
+        self.assertEqual(response.status_code, 403)
+
+        return response
+
+
+class PatchMixin:
+    patch_payload: dict = None
+
+    def test_patch_unauthenticated_user(self):
+        try:
+            assert self.patch_payload
+        except AssertionError:
+            print("patch_payload must be defined in the test setUp method to support the PatchMixin")
+            raise
+
+        response = requests.patch(f'{self.url}/{self.object_id}', self.patch_payload)
+        self.assertEqual(response.status_code, 403)
+
+        return response
+
+
 class DeleteMixin:
 
     def test_delete_valid(self):
