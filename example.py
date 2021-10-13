@@ -14,7 +14,7 @@ class ExampleAPIBase(BaseAPICase):
         super().setUpClass()
 
 
-class BaseUser(ExampleAPIBase):
+class TestUser(DeleteMixin, ListMixin, RetrieveMixin, ExampleAPIBase):
 
     @classmethod
     def setUpClass(cls):
@@ -29,9 +29,3 @@ class BaseUser(ExampleAPIBase):
             "email": fake.email()
         }
         super().setUp()
-
-
-class RetrieveUser(RetrieveMixin, BaseUser):
-    pass
-
-
