@@ -1,7 +1,7 @@
 from faker import Faker
 import requests
 
-from api_test import BaseAPICase, DeleteMixin, ListMixin, RetrieveMixin
+from api_test import BaseAPICase, CreateMixin, DeleteMixin, ListMixin, PatchMixin, PutMixin, RetrieveMixin
 
 
 class ExampleAPIBase(BaseAPICase):
@@ -14,7 +14,7 @@ class ExampleAPIBase(BaseAPICase):
         super().setUpClass()
 
 
-class TestUser(DeleteMixin, ListMixin, RetrieveMixin, ExampleAPIBase):
+class TestUser(CreateMixin, DeleteMixin, ListMixin, PatchMixin, PutMixin, RetrieveMixin, ExampleAPIBase):
 
     @classmethod
     def setUpClass(cls):
@@ -25,7 +25,8 @@ class TestUser(DeleteMixin, ListMixin, RetrieveMixin, ExampleAPIBase):
     def setUp(self):
         fake = Faker()
         self.post_payload = {
-            "name": " ".join(fake.words(3)),
+            "name": f"{fake.first_name()} {fake.last_name()}",
             "email": fake.email()
         }
+        self.patch_payload = {"name": f"{fake.first_name()} {fake.last_name()}"}
         super().setUp()
