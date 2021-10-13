@@ -9,6 +9,7 @@ class BaseAPICase(TestCase):
     session: requests.Session = None
     post_payload: dict = None
     object_id_key = "id"
+    delete_on_teardown = True
 
     @property
     def object_id(self):
@@ -24,10 +25,8 @@ class BaseAPICase(TestCase):
         self.assertTrue(response.ok)
 
     def setUp(self):
-        assert self.base_url
-        assert self.route
-        assert self.post_payload
-        super().setUp()
+        if not self.route:
+            return
 
         if not self.session:
             self.session = requests.Session()
@@ -38,4 +37,5 @@ class BaseAPICase(TestCase):
 
     def tearDown(self):
         super().tearDown()
-        self.delete()
+        if self.delete_on_teardown and self.route:
+            self.delete()
